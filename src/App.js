@@ -46,7 +46,16 @@ export default function App() {
 
     <ul>
       {appointmentList.map(appointment => (
-        <AppointmentInfo appointment={appointment} key={appointment.id}/>
+        <AppointmentInfo 
+          key={appointment.id}  
+          appointment={appointment} 
+          onDeleteAppointment={
+            appointmentId => {
+              setAppointmentList(appointmentList.filter(
+                appointment => appointment.id !== appointmentId
+              ))
+            }
+          }/>
       ))}
       
     </ul>
