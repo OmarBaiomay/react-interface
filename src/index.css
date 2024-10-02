@@ -2,3 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.container{
+    @apply w-[85vw] mx-auto
+}
