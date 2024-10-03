@@ -1,9 +1,32 @@
 import { useState } from "react";
 import { BiCalendarPlus } from "react-icons/bi";
 
-const AddAppointment = () => {
+const AddAppointment = ({onSendAppointment, lastId}) => {
+
+  const clearData = {
+    ownerName: '',
+    petName: '',
+    aptDate: '',
+    aptTime: '',
+    aptNotes: ''
+  }
 
   let [toggleForm, setToggleForm] = useState(false);
+  let [formData, setFormDate] = useState(clearData)
+
+  const onFormDataSubmit = () =>{
+    const appointmentInfo = {
+      id: lastId + 1,
+      ownerName: formData.ownerName,
+      petName: formData.petName,
+      aptDate: formData.aptDate + " " + formData.aptTime,
+      aptNotes: formData.aptNotes
+    }
+
+    onSendAppointment(appointmentInfo)
+    setFormDate(clearData)
+    setToggleForm(!toggleForm)
+  }
 
   return (
     <div>
@@ -18,7 +41,10 @@ const AddAppointment = () => {
             </label>
             <div className="mt-1 sm:mt-0 sm:col-span-2">
               <input type="text" name="ownerName" id="ownerName"
-                className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md" />
+                className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md" 
+                onChange={(e)=>{setFormDate({...formData, ownerName: e.target.value})}}
+                value={formData.ownerName}
+                />
             </div>
           </div>
 
@@ -28,7 +54,10 @@ const AddAppointment = () => {
             </label>
             <div className="mt-1 sm:mt-0 sm:col-span-2">
               <input type="text" name="petName" id="petName"
-                className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md" />
+                className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md" 
+                onChange={(e)=>{setFormDate({...formData, petName: e.target.value})}}
+                value={formData.petName}
+                />
             </div>
           </div>
 
@@ -38,7 +67,10 @@ const AddAppointment = () => {
             </label>
             <div className="mt-1 sm:mt-0 sm:col-span-2">
               <input type="date" name="aptDate" id="aptDate"
-                className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md" />
+                className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md" 
+                onChange={(e)=>{setFormDate({...formData, aptDate: e.target.value})}}
+                value={formData.aptDate}
+                />
             </div>
           </div>
 
@@ -48,7 +80,10 @@ const AddAppointment = () => {
             </label>
             <div className="mt-1 sm:mt-0 sm:col-span-2">
               <input type="time" name="aptTime" id="aptTime"
-                className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md" />
+                className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md" 
+                onChange={(e)=>{setFormDate({...formData, aptTime: e.target.value})}}
+                value={formData.aptTime}
+                />
             </div>
           </div>
 
@@ -58,14 +93,18 @@ const AddAppointment = () => {
             </label>
             <div className="mt-1 sm:mt-0 sm:col-span-2">
               <textarea id="aptNotes" name="aptNotes" rows="3"
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Detailed comments about the condition"></textarea>
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Detailed comments about the condition"
+                onChange={(e)=>{setFormDate({...formData, aptNotes: e.target.value})}}
+                value={formData.aptNotes}
+                ></textarea>
             </div>
           </div>
 
 
           <div className="pt-5">
             <div className="flex justify-end">
-              <button type="submit" className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-400 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">
+              <button type="submit" className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-400 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400" 
+              onClick={onFormDataSubmit}>
                 Submit
               </button>
             </div>

@@ -1,5 +1,5 @@
 
-import { useState ,useCallback, useEffect} from "react"
+import { useState ,useCallback, useEffect, useReducer} from "react"
 
 
 /**
@@ -18,6 +18,25 @@ import {BiCalendar} from "react-icons/bi"
 export default function App() {
 
   let [appointmentList, setAppointmentList] = useState([]);
+  let [query, setQuery] = useState("");
+  let [sortBy, setSortBy] = useState("petName");
+  let [orderBy, setOrderBy] = useState("asc");
+
+  const filteredAppointments = appointmentList.filter(
+    item => {
+      return(
+        item.petName.toLowerCase().includes(query.toLowerCase()) || 
+        item.ownerName.toLowerCase().includes(query.toLowerCase()) || 
+        item.aptNotes.toLowerCase().includes(query.toLowerCase())
+      )
+    }
+  ).sort((a, b) => {
+    let order = (orderBy === 'asc') ? 1 : -1;
+
+    return (
+      a[sortBy].toLowerCase() < b[sortBy].toLowerCase() ? order * -1 : 1 * order
+    )
+  })
 
   let fetchData = useCallback(
     () => {
@@ -40,12 +59,26 @@ export default function App() {
     <h1 className="text-3xl font-thin text-center py-10">
     <BiCalendar className="inline"/> My Appointments 
     </h1>
-    <Search/>
+    <Search
+      query={query} 
+      onQueryChange={myQuery => setQuery(myQuery)}
+      orderBy={orderBy}
+      onOrderByChange={myOrder => setOrderBy(myOrder)}
+      sortBy={sortBy}
+      onSortByChange={mySort => setSortBy(mySort)}
+    />
 
-    <AddAppointment />
+    <AddAppointment 
+      onSendAppointment={
+        myAppointment => setAppointmentList([...appointmentList, myAppointment])
+      }
+
+      lastId={appointmentList.reduce(
+        (max, item) => Number(item.id) > max ? Number(item.id) : max, 0 )}
+    />
 
     <ul>
-      {appointmentList.map(appointment => (
+      {filteredAppointments.map(appointment => (
         <AppointmentInfo 
           key={appointment.id}  
           appointment={appointment} 
